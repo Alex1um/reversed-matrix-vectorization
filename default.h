@@ -69,11 +69,11 @@ void MatrixMultScalar(M &in_out, T sc) {
 }
 
 template<typename M>
-void MatrixTranspose(M &in_out) {
+void MatrixTranspose(M &out, M &in) {
   for (size_t i = 0; i < N; i++) {
 #pragma clang loop vectorize(disable)
     for (size_t j = 0; j < N; j++) {
-      in_out[i][j] = in_out[j][i];
+      out[i][j] = in[j][i];
     }
   }
 }
@@ -83,8 +83,8 @@ void MatrixTranspose(M &in_out) {
 template<typename T, typename M>
 M MatrixReverseUnopt(M &A, int m) {
   M B = MatrixCreate<T>();
-  MatrixCopy(B, A);
-  unopt::MatrixTranspose(B);
+//  MatrixCopy(B, A);
+  unopt::MatrixTranspose(B, A);
 
   T coef = unopt::MatrixGetMaxMult<T, M>(A);
 
@@ -119,7 +119,7 @@ M MatrixReverseUnopt(M &A, int m) {
 template<typename T, typename M, typename t, typename c = chrono::steady_clock>
 M MatrixReverseUnoptTime(M &A, int m) {
   M B = MatrixCreate<T>();
-  MatrixCopy(B, A);
+//  MatrixCopy(B, A);
 
   M BA = MatrixCreate<T>();
 
@@ -136,7 +136,7 @@ M MatrixReverseUnoptTime(M &A, int m) {
   M Arev = MatrixCreate<T>();
 
   auto start = c::now();
-  unopt::MatrixTranspose(B);
+  unopt::MatrixTranspose(B, A);
   T coef = unopt::MatrixGetMaxMult<T, M>(A);
   unopt::MatrixMultScalar(B, 1 / coef);
 

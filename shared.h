@@ -12,7 +12,7 @@ using namespace std;
 using namespace std::chrono;
 
 //#define N 2048
-#define N 4
+#define N 64
 
 template<typename T>
 T (*(MatrixCreate()))[N] {
