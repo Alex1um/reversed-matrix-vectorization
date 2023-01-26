@@ -110,7 +110,7 @@ M MatrixReverseAutoOptTime(M &A, int m) {
     autoopt::MatrixSum(I, I, Rpow);
   }
   autoopt::MatrixMultiply(Arev, I, B);
-  cout << "Execution time: " << (chrono::duration_cast<t>(c::now() - start)).count() << endl;
+  cout << "Execution time: " << (chrono::duration_cast<t>(c::now() - start)) << endl;
 
   return Arev;
 }

@@ -26,23 +26,32 @@ void test() {
   MatrixFill(input);
   int m = 10;
 
-
+  cout << "Input matrix(A)" << endl;
   MatrixPrint(input, 4);
   M out;
-  out = MatrixReverseUnoptTime<T, M, A>(input, m);
-  MatrixPrint(out, 4);
-
-  out = MatrixReverseAutoOptTime<T, M, A>(input, m);
-  MatrixPrint(out, 4);
-
-  out = MatrixReverseIntrisics<T, M, A>(input, m);
-  MatrixPrint(out, 4);
-
+//  cout << "Unoptimized version:" << endl;
+//  out = MatrixReverseUnoptTime<T, M, A>(input, m);
+//  cout << "Output matrix 4x4 slice:" << endl;
+//  MatrixPrint(out, 4);
+//
+//  cout << "Auto-optimized version:" << endl;
+//  out = MatrixReverseAutoOptTime<T, M, A>(input, m);
+//  cout << "Output matrix 4x4 slice:" << endl;
+//  MatrixPrint(out, 4);
+//
+//  cout << "Hand-optimized version:" << endl;
+//  out = MatrixReverseIntrisics<T, M, A>(input, m);
+//  cout << "Output matrix 4x4 slice:" << endl;
+//  MatrixPrint(out, 4);
+//
+  cout << "Blas-optimized version:" << endl;
   out = MatrixReverseCBlas<T, M, A>(input, m);
+  cout << "Output matrix 4x4 slice:" << endl;
   MatrixPrint(out, 4);
 }
 
 int main() {
+  cout << duration_cast<seconds>(microseconds(1)) << endl;
   test<float, float (*)[N], microseconds>();
   return 0;
 }

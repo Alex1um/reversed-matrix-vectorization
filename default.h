@@ -151,7 +151,7 @@ M MatrixReverseUnoptTime(M &A, int m) {
     unopt::MatrixSum(I, I, Rpow);
   }
   unopt::MatrixMultiply(Arev, I, B);
-  cout << "Execution time: " << (chrono::duration_cast<t>(c::now() - start)).count() << endl;
+  cout << "Execution time: " << (chrono::duration_cast<t>(c::now() - start)) << endl;
 
   return Arev;
 }

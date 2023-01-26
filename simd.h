@@ -125,7 +125,7 @@ M MatrixReverseIntrisics(M &A, int m) {
     intropt::MatrixSum(I, I, Rpow);
   }
   intropt::MatrixMultiply(Arev, I, B);
-  cout << "Execution time: " << (chrono::duration_cast<t>(c::now() - start)).count() << endl;
+  cout << "Execution time: " << (chrono::duration_cast<t>(c::now() - start)) << endl;
 
   return Arev;
 }
