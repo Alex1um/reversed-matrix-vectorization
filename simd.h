@@ -7,9 +7,8 @@
 
 #include "shared.h"
 #include <x86intrin.h>
-#include <algorithm>
 
-namespace simdopt {
+namespace intropt {
 
 template<typename M = float **>
 void MatrixMultiply(M &out, M &in1, M &in2) {
@@ -93,7 +92,7 @@ void MatrixTranspose(M &out, M &in) {
 }
 
 template<typename T, typename M, typename t, typename c = chrono::steady_clock>
-M MatrixReverseSimd(M &A, int m) {
+M MatrixReverseIntrisics(M &A, int m) {
   M B = MatrixCreate<T>();
 
   M BA = MatrixCreate<T>();
@@ -111,21 +110,21 @@ M MatrixReverseSimd(M &A, int m) {
   M Arev = MatrixCreate<T>();
 
   auto start = c::now();
-  simdopt::MatrixTranspose(B, A);
-  T coef = simdopt::MatrixGetMaxMult<T, M>(A);
-  simdopt::MatrixMultScalar(B, 1 / coef);
+  intropt::MatrixTranspose(B, A);
+  T coef = intropt::MatrixGetMaxMult<T, M>(A);
+  intropt::MatrixMultScalar(B, 1 / coef);
 
-  simdopt::MatrixMultiply(BA, B, A);
+  intropt::MatrixMultiply(BA, B, A);
 
-  simdopt::MatrixMinus(R, I, BA);
+  intropt::MatrixMinus(R, I, BA);
 
   for (m -= 1; m > 0; m--) {
     MatrixCopy(tmp, Rpow);
     MatrixFillZero(Rpow);
-    simdopt::MatrixMultiply(Rpow, tmp, R);
-    simdopt::MatrixSum(I, I, Rpow);
+    intropt::MatrixMultiply(Rpow, tmp, R);
+    intropt::MatrixSum(I, I, Rpow);
   }
-  simdopt::MatrixMultiply(Arev, I, B);
+  intropt::MatrixMultiply(Arev, I, B);
   cout << "Execution time: " << (chrono::duration_cast<t>(c::now() - start)).count() << endl;
 
   return Arev;

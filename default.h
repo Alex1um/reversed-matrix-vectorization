@@ -12,11 +12,11 @@ namespace unopt {
 template<typename M>
 void MatrixMultiply(M &out, M &in1, M &in2) {
   for (size_t i = 0; i < N; i++) {
-    for (size_t j = 0; j < N; j++) {
-      out[i][j] = 0;
+    for (size_t k = 0; k < N; k++) {
+      float pt = in1[i][k];
 #pragma clang loop vectorize(disable)
-      for (size_t k = 0; k < N; k++) {
-        out[i][j] += in1[i][k] * in2[k][j];
+        for (size_t j = 0; j < N; j++) {
+        out[i][j] += pt * in2[k][j];
       }
     }
   }
@@ -146,6 +146,7 @@ M MatrixReverseUnoptTime(M &A, int m) {
 
   for (m -= 1; m > 0; m--) {
     MatrixCopy(tmp, Rpow);
+    MatrixFillZero(Rpow);
     unopt::MatrixMultiply(Rpow, tmp, R);
     unopt::MatrixSum(I, I, Rpow);
   }

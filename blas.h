@@ -41,7 +41,6 @@ void cblas_sgemm(const enum CBLAS_ORDER Order,
 
 namespace blas {
 
-
 template<typename T = float, typename M>
 T MatrixGetMaxMult(M &in) {
   float max_row = 1e-38, max_col = 1e-38;
@@ -49,13 +48,19 @@ T MatrixGetMaxMult(M &in) {
     float row = cblas_sasum(N, in[i], 1);
     if (max_row < row) max_row = row;
 
-    float col = 0;
-    for (size_t j = 0; j < N; j++) {
-      col += abs(in[j][i]);
-    }
+    float col = cblas_sasum(N, &in[0][i], N);
     if (max_col < col) max_col = col;
   }
   return max_row * max_col;
+}
+
+template<typename M>
+void MatrixSum(M &out, M &in1, M &in2) {
+  for (size_t i = 0; i < N; i++) {
+    for (size_t j = 0; j < N; j++) {
+      out[i][j] = in1[i][j] + in2[i][j];
+    }
+  }
 }
 
 }
@@ -70,6 +75,9 @@ M MatrixReverseCBlas(M &A, int m) {
 
   M Rsum = MatrixCreate<T>();
   MatrixFillOne(Rsum);
+
+  M Rpow = MatrixCreate<T>();
+  MatrixFillOne(Rpow);
 
   M tmp = MatrixCreate<T>();
 
@@ -94,20 +102,22 @@ M MatrixReverseCBlas(M &A, int m) {
       );
 
   for (m -= 1; m > 0; m--) {
+    MatrixCopy(tmp, Rpow);
     cblas_sgemm(
         CblasRowMajor,
         CblasNoTrans,
         CblasNoTrans,
         N, N, N,
         1.0,
+        (float *)tmp,
+        N,
         (float *)R,
         N,
-        (float *)I,
-        N,
-        1.0,
-        (float *)Rsum,
+        0.0,
+        (float *)Rpow,
         N
     );
+    blas::MatrixSum(Rsum, Rsum, Rpow);
   }
   cblas_sgemm(
       CblasRowMajor,
